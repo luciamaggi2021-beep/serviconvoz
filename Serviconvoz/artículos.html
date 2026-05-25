@@ -455,48 +455,119 @@ body {
   });
 </script>
 
-<h3 class="np">
-  Nuestros Articulos
-</h3>
+<!-- ... todo tu header, menú, etc. se mantiene igual ... -->
 
-<div class="contenedor-cuadros">
+<h3 class="np">Nuestros Articulos</h3>
 
-  <!-- ARTÍCULO 1 -->
-  <div class="container1">
-    <a href="C:\Users\usuario\OneDrive\Documentos\Serviconvoz\Nuestros-articulos\Columna de Opinión Discriminación a las mujeres trans en Aregntina durante este siglo.docx" download="Columna-de-opinion-discriminacion-hacia-mujeres-trans" style="text-decoration: none;">
-      <img class="mujertrans" src="C:\Users\usuario\OneDrive\Documentos\Serviconvoz\Nuestros-articulos\mujertrans.jpg" alt="Mujer Trans">
-      <div class="marquito">
-        <h1>Discriminacion a las Mujeres Trans en Argentina durante este Siglo</h1>
-        <i class="fas fa-download download-icon"></i>
-      </div>
-    </a>
-  </div>
-
-  
-  <div class="container2">
-    <div style="position: relative; width: 100%; height: 100%;">
-      <div style="height: calc(100% - 70px); background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-file-alt" style="font-size: 50px; color: #123a6b; opacity: 0.5;"></i>
-      </div>
-      <div class="marquito">
-        <h3> </h3>
-      </div>
-    </div>
-  </div>
-
-  <div class="container3">
-    <div style="position: relative; width: 100%; height: 100%;">
-      <div style="height: calc(100% - 70px); background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
-        <i class="fas fa-file-alt" style="font-size: 50px; color: #123a6b; opacity: 0.5;"></i>
-      </div>
-      <div class="marquito">
-        <h3> </h3>
-      </div>
-    </div>
-  </div>
-
-
+<div class="contenedor-cuadros" id="contenedor-articulos">
+  <!-- Los artículos se cargan solos -->
 </div>
+
+<script>
+  // SCRIPT DE BÚSQUEDA (el que ya tenés)
+  const searchIcon = document.getElementById('searchIcon');
+  const searchInput = document.getElementById('searchInput');
+  
+  searchIcon.addEventListener('click', function(e) {
+    e.stopPropagation();
+    searchInput.classList.toggle('active');
+    if (searchInput.classList.contains('active')) {
+      searchInput.focus();
+    }
+  });
+  
+  searchInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+      const busqueda = searchInput.value.trim();
+      if (busqueda !== '') {
+        alert('Buscando: ' + busqueda);
+        searchInput.classList.remove('active');
+        searchInput.value = '';
+      }
+    }
+  });
+  
+  document.addEventListener('click', function(e) {
+    if (!searchInput.contains(e.target) && e.target !== searchIcon) {
+      searchInput.classList.remove('active');
+      searchInput.value = '';
+    }
+  });
+
+  // ========== SCRIPT PARA LOS ARTÍCULOS (agregá esto al final) ==========
+  const articulos = [
+    {
+      id: 1,
+      titulo: "Discriminación a las Mujeres Trans en Argentina durante este Siglo",
+      imagen: "Nuestros-articulos/mujertrans.jpg",
+      pdf: "Nuestros-articulos/Columna de Opinión Discriminación a las mujeres trans en Aregntina durante este siglo.docx",
+      disponible: true
+    },
+    {
+      id: 2,
+      titulo: "Próximamente - Nuevo Artículo",
+      imagen: "",
+      pdf: "#",
+      disponible: false
+    },
+    {
+      id: 3,
+      titulo: "Próximamente - Nueva Columna",
+      imagen: "",
+      pdf: "#",
+      disponible: false
+    }
+  ];
+
+  function mostrarArticulos() {
+    const contenedor = document.getElementById('contenedor-articulos');
+    if (!contenedor) return;
+    
+    contenedor.innerHTML = '';
+    
+    articulos.forEach(articulo => {
+      const tieneImagen = articulo.imagen && articulo.imagen !== '';
+      const estaDisponible = articulo.disponible;
+      
+      let html = `<div class="container${articulo.id}">`;
+      
+      if (estaDisponible) {
+        html += `<a href="${articulo.pdf}" download style="text-decoration: none;">`;
+      } else {
+        html += `<div style="cursor: default;">`;
+      }
+      
+      if (tieneImagen && estaDisponible) {
+        html += `<img class="mujertrans" src="${articulo.imagen}" alt="${articulo.titulo}">`;
+      } else if (tieneImagen && !estaDisponible) {
+        html += `<img class="mujertrans" src="${articulo.imagen}" alt="${articulo.titulo}" style="opacity: 0.5;">`;
+      } else {
+        html += `<div style="height: calc(100% - 70px); background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                  <i class="fas fa-file-alt" style="font-size: 50px; color: #123a6b; opacity: 0.5;"></i>
+                </div>`;
+      }
+      
+      html += `<div class="marquito">
+                <h1>${articulo.titulo}</h1>
+                ${estaDisponible ? '<i class="fas fa-download download-icon"></i>' : '<i class="fas fa-clock download-icon" style="opacity: 0.5;"></i>'}
+              </div>`;
+      
+      if (estaDisponible) {
+        html += `</a>`;
+      } else {
+        html += `</div>`;
+      }
+      
+      html += `</div>`;
+      contenedor.innerHTML += html;
+    });
+  }
+  
+  mostrarArticulos();
+</script>
+
+</body>
+</html>
 
 </body>
 </html>
