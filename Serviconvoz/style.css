@@ -1,0 +1,109 @@
+body {
+  margin: 0;
+  font-family: "Georgia", serif;
+}
+
+/* HEADER */
+.header {
+  background-color: #0d3b66;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  position: relative;
+}
+
+/* Secciones */
+.left, .right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Título centrado */
+.title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 32px;
+  font-weight: normal;
+}
+
+/* Iconos */
+i {
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* Botón home */
+.home-btn {
+  border: 2px solid white;
+  border-radius: 50%;
+  padding: 10px;
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+}
+
+/* Botón escuchar */
+.listen-btn {
+  border: 2px solid white;
+  padding: 6px 12px;
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* BUSCADOR */
+.search-container {
+  position: relative;
+}
+
+#searchInput {
+  position: absolute;
+  left: 25px;
+  top: -5px;
+  padding: 5px;
+  border: none;
+  outline: none;
+  display: none;
+}
+
+#searchInput.active {
+  display: block;
+}
+
+/* MENÚ LATERAL */
+.side-menu {
+  position: fixed;
+  left: -250px;
+  top: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #0d3b66;
+  padding-top: 60px;
+  transition: 0.3s;
+}
+
+.side-menu a {
+  display: block;
+  color: white;
+  padding: 15px;
+  text-decoration: none;
+}
+
+.side-menu a:hover {
+  background-color: #145da0;
+}
+
+.side-menu.active {
+  left: 0;
+}
+
+/* Links */
+a {
+  color: white;
+}

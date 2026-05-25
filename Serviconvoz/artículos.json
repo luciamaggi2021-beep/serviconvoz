@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "titulo": "Discriminación a las Mujeres Trans en Argentina durante este Siglo",
+    "imagen": "Nuestros-articulos/mujertrans.jpg",
+    "pdf": "Nuestros-articulos/Columna de Opinión Discriminación a las mujeres trans en Aregntina durante este siglo.docx",
+    "fecha": "2024-01-15"
+  },
+  {
+    "id": 2,
+    "titulo": "Próximamente",
+    "imagen": "",
+    "pdf": "#",
+    "fecha": "Próximamente"
+  },
+  {
+    "id": 3,
+    "titulo": "Próximamente",
+    "imagen": "",
+    "pdf": "#",
+    "fecha": "Próximamente"
+  }
+]
