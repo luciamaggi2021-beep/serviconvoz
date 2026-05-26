@@ -1,0 +1,50 @@
+{
+  "articulos": [
+    {
+      "id": 1,
+      "titulo": "Discriminacion a las Mujeres Trans en Argentina durante este Siglo",
+      "imagen": "Nuestros-articulos/mujertrans.jpg",
+      "pdf": "Nuestros-articulos/Columna de Opinión Discriminación a las mujeres trans en Aregntina durante este siglo.docx",
+      "fecha": "2024-01-15",
+      "pagina": "articulos"
+    },
+    {
+      "id": 2,
+      "titulo": "Proximamente",
+      "imagen": "",
+      "pdf": "#",
+      "fecha": "Proximamente",
+      "pagina": "articulos"
+    },
+    {
+      "id": 3,
+      "titulo": "Proximamente",
+      "imagen": "",
+      "pdf": "#",
+      "fecha": "Proximamente",
+      "pagina": "articulos"
+    }
+  ],
+  "programas": [
+    {
+      "id": 1,
+      "titulo": "Radio en Vivo",
+      "descripcion": "Transmisión 24/7",
+      "pagina": "programas"
+    },
+    {
+      "id": 2,
+      "titulo": "Entrevistas",
+      "descripcion": "Todos los viernes 8pm",
+      "pagina": "programas"
+    }
+  ],
+  "noticias": [
+    {
+      "id": 1,
+      "titulo": "Noticia Local 1",
+      "descripcion": "Descripción de la noticia",
+      "pagina": "noticias"
+    }
+  ]
+}
