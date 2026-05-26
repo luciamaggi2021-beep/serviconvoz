@@ -239,6 +239,36 @@ body {
 .icon-link:hover {
   opacity: 0.7;
 }
+/*Estilos de búsqueda*/
+
+.search-wrapper {
+  position: relative;
+}
+
+#resultados-flotantes {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10000;
+  display: none;
+  margin-top: 10px;
+  border: 3px solid #ddd;
+}
+
+#resultados-flotantes a {
+  text-decoration: none;
+  color: inherit;
+}
+
+#resultados-flotantes div:hover {
+  background-color: #f5f5f5;
+}
 </style>
 </head>
 
@@ -309,40 +339,164 @@ body {
 </div>
 
 <script>
-  // SCRIPT PARA LA BARRA DE BÚSQUEDA EN EL HEADER
   const searchIcon = document.getElementById('searchIcon');
   const searchInput = document.getElementById('searchInput');
   
-  // Al hacer clic en la lupa, mostrar/ocultar el input
-  searchIcon.addEventListener('click', function(e) {
-    e.stopPropagation();
-    searchInput.classList.toggle('active');
-    if (searchInput.classList.contains('active')) {
-      searchInput.focus();
-    }
-  });
+  let todosLosArticulos = [];
+  let resultadosDiv = null;
   
-  // Buscar al presionar Enter
-  searchInput.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      const busqueda = searchInput.value.trim();
-      if (busqueda !== '') {
-        alert('Buscando: ' + busqueda);
-        // Aquí puedes poner tu lógica de búsqueda
-        // Ejemplo: filtrar contenido, redirigir, etc.
+  // Crear la ventana flotante de resultados
+  function crearVentanaResultados() {
+    if (document.getElementById('resultados-flotantes')) return;
+    
+    const div = document.createElement('div');
+    div.id = 'resultados-flotantes';
+    div.style.cssText = `
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 10000;
+      display: none;
+      margin-top: 10px;
+      border: 1px solid #ddd;
+    `;
+    
+    const wrapper = document.querySelector('.search-wrapper');
+    if (wrapper) {
+      wrapper.style.position = 'relative';
+      wrapper.appendChild(div);
+    } else {
+      document.body.appendChild(div);
+    }
+    
+    return div;
+  }
+  
+  // Cargar artículos desde JSON
+  async function cargarArticulos() {
+    try {
+      const respuesta = await fetch('contenido.json');
+      const datos = await respuesta.json();
+      todosLosArticulos = datos.articulos || [];
+      console.log('📦 Artículos cargados:', todosLosArticulos.length);
+    } catch (error) {
+      console.error('Error:', error);
+      todosLosArticulos = [
+        { id: 1, titulo: "Discriminación a las Mujeres Trans en Argentina durante este Siglo", imagen: "Nuestros-articulos/mujertrans.jpg", pdf: "Nuestros-articulos/archivo.docx" },
+        { id: 2, titulo: "Próximamente - Nuevo Artículo", imagen: "", pdf: "#" },
+        { id: 3, titulo: "Próximamente - Nueva Columna", imagen: "", pdf: "#" }
+      ];
+    }
+  }
+  
+  // Mostrar resultados en la ventana flotante
+  function mostrarResultados(busqueda) {
+    resultadosDiv = resultadosDiv || crearVentanaResultados();
+    
+    const termino = busqueda.toLowerCase().trim();
+    
+    if (termino === '') {
+      resultadosDiv.style.display = 'none';
+      return;
+    }
+    
+    const filtrados = todosLosArticulos.filter(item => {
+      return item.titulo.toLowerCase().includes(termino);
+    });
+    
+    if (filtrados.length === 0) {
+      resultadosDiv.innerHTML = `
+        <div style="padding: 20px; text-align: center; color: #999;">
+          Aun no hemos escrito este articulo ＞﹏＜ "${busqueda}"
+        </div>
+      `;
+      resultadosDiv.style.display = 'block';
+      return;
+    }
+    
+    let html = '';
+    filtrados.forEach(item => {
+      const tieneImagen = item.imagen && item.imagen !== '';
+      const estaDisponible = item.pdf && item.pdf !== '#';
+      
+      html += `
+        <div style="display: flex; align-items: center; padding: 12px 15px; border-bottom: 1px solid #eee; transition: background 0.2s; cursor: pointer; hover:background: #f5f5f5;">
+          ${estaDisponible ? `<a href="${item.pdf}" download style="text-decoration: none; display: flex; align-items: center; width: 100%; color: inherit;">` : '<div style="display: flex; align-items: center; width: 100%;">'}
+            ${tieneImagen ? 
+              `<img src="${item.imagen}" alt="${item.titulo}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-right: 15px;">` : 
+              `<div style="width: 70px; height: 70px; background-color: #123a6b; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                 <i class="fas fa-file-alt" style="color: white; font-size: 20px;"></i>
+               </div>`
+            }
+            <div style="flex: 1;">
+              <h4 style="margin: 0 0 5px 0; font-size: 16px; color: #123a6b;">${item.titulo}</h4>
+              <span style="font-size: 15px; color: #666;">${estaDisponible ? 'Por: Lucia Tulian Amuchastegui' : 'Proximamente'}</span>
+            </div>
+            ${estaDisponible ? '<i class="fas fa-download" style="color: #123a6b;"></i>' : ''}
+          ${estaDisponible ? `</a>` : `</div>`}
+        </div>
+      `;
+    });
+    
+    resultadosDiv.innerHTML = html;
+    resultadosDiv.style.display = 'block';
+    
+    // Agregar hover a los elementos
+    resultadosDiv.querySelectorAll('div').forEach(el => {
+      el.addEventListener('mouseenter', () => el.style.backgroundColor = '#f5f5f5');
+      el.addEventListener('mouseleave', () => el.style.backgroundColor = '');
+    });
+  }
+  
+  // Ocultar resultados
+  function ocultarResultados() {
+    if (resultadosDiv) {
+      resultadosDiv.style.display = 'none';
+    }
+  }
+  
+  // Eventos de la barra de búsqueda
+  if (searchIcon && searchInput) {
+    searchIcon.addEventListener('click', function(e) {
+      e.stopPropagation();
+      searchInput.classList.toggle('active');
+      if (searchInput.classList.contains('active')) {
+        searchInput.focus();
+      } else {
+        searchInput.value = '';
+        ocultarResultados();
+      }
+    });
+    
+    // Búsqueda en vivo mientras escribe
+    searchInput.addEventListener('input', function(e) {
+      mostrarResultados(e.target.value);
+    });
+    
+    searchInput.addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        mostrarResultados(searchInput.value);
+      }
+    });
+    
+    // Cerrar al hacer clic fuera
+    document.addEventListener('click', function(e) {
+      if (resultadosDiv && !searchInput.contains(e.target) && searchIcon !== e.target && !resultadosDiv.contains(e.target)) {
         searchInput.classList.remove('active');
         searchInput.value = '';
+        ocultarResultados();
       }
-    }
-  });
+    });
+  }
   
-  // Opcional: cerrar el buscador si se hace clic fuera
-  document.addEventListener('click', function(e) {
-    if (!searchInput.contains(e.target) && e.target !== searchIcon) {
-      searchInput.classList.remove('active');
-      searchInput.value = '';
-    }
-  });
+  // Cargar artículos al iniciar
+  cargarArticulos();
 </script>
 
 
